@@ -13,10 +13,11 @@
 
 (function($) {
     var filelist = new Array();
+    var current_index = 0;
 
     var parsePaths = function() {
         $('td.path a').each(function (index) {
-            filelist[index] = new Array($(this).attr('href'), $(this).html());
+            filelist[index] = $(this).attr('href');
         });
     }
 
@@ -28,17 +29,35 @@
         $('.hentry').css('margin', '0px 0px 0px 500px');
     }
 
-    var renderPaths = function() {
-        parsePaths();
-        movePageRight();
-        movePaths();
+    var showPath = function (index) {
+        $(filelist[current_index]).hide();
+        current_index = index;
+        $(filelist[index]).show();
     }
 
-    var attachEvents = function() {
+    var hideAllPaths = function() {
         $.each(filelist, function (index, value) {
+            $(value).hide();
         });
     }
 
+    var renderPaths = function() {
+        movePageRight();
+        movePaths();
+        hideAllPaths();
+        showPath(current_index);
+    }
+
+    var attachEvents = function() {
+        $('td.path a').each(function (index) {
+            filelist[index] = $(this).attr('href');
+            $(this).click(function () { 
+                showPath(index);
+            });
+        });
+    }
+
+    parsePaths();
     renderPaths();
     attachEvents();
 })(jQuery);
