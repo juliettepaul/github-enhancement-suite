@@ -53,7 +53,7 @@
             filelist[index] = $(this).attr('href');
             $(this).click(function () { 
                 showPath(index);
-                window.scrollTo(0,0);
+                window.scrollTo(0, 300);
                 return false;
             });
         });
