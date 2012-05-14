@@ -6,9 +6,8 @@
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
 // @match      https://github.etsycorp.com/*/commit/*
-// @match      https://www.github.com/*/pull/*
-// @match      https://www.github.com/*/commit/*
-// @update_url https://raw.github.com/jayson/github-enhancement-suite/master/ges.js
+// @match      https://*github.com/*/pull/*
+// @match      https://*github.com/*/commit/*
 // @copyright  2012
 // ==/UserScript==
 
