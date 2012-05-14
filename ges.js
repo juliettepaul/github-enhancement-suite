@@ -15,40 +15,40 @@
     var filelist = new Array();
     var current_index = 0;
 
-    var parsePaths = function() {
+    function parsePaths() {
         $('td.path a').each(function (index) {
             filelist[index] = $(this).attr('href');
         });
     }
 
-    var movePaths = function () {
+    function movePaths () {
         $('#toc').wrapInner('<div style="position:fixed; width: 490px; top: 60px; left: 0px;" />');
     }
 
-    var movePageRight = function () {
+    function movePageRight () {
         $('.hentry').css('margin', '0px 0px 0px 500px');
     }
 
-    var showPath = function (index) {
+    function showPath (index) {
         $(filelist[current_index]).hide();
         current_index = index;
         $(filelist[index]).show();
     }
 
-    var hideAllPaths = function() {
+    function hideAllPaths() {
         $.each(filelist, function (index, value) {
             $(value).hide();
         });
     }
 
-    var renderPaths = function() {
+    function renderPaths() {
         movePageRight();
         movePaths();
         hideAllPaths();
         showPath(current_index);
     }
 
-    var attachEvents = function() {
+    function attachEvents() {
         $('td.path a').each(function (index) {
             filelist[index] = $(this).attr('href');
             $(this).click(function () { 
