@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name       GitHub Enhancement Suite
 // @namespace  jpi
-// @version    0.3
+// @version    0.2
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
 // @match      https://github.etsycorp.com/*/commit/*
 // @match      https://*github.com/*/pull/*
 // @match      https://*github.com/*/commit/*
-// @updateURL https://raw.github.com/jayson/github-enhancement-suite/unstable/ges.js
 // @copyright  2012
 // ==/UserScript==
 
