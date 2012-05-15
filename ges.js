@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Enhancement Suite
 // @namespace  jpi
-// @version    0.2
+// @version    0.3
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
