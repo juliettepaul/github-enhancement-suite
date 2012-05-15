@@ -37,15 +37,31 @@
         $("a[href=" + filelist[index] + "]").css('font-weight', 'bold');
     }
 
-    function hideAllPaths() {
+    function iteratePaths(func) {
         $.each(filelist, function (index, value) {
+            func(index, value);
+        });
+    }
+
+    function hideAllPaths() {
+        iteratePaths(function (index, value) {
             $(value).hide();
+        });
+    }
+
+    function addCommentCount() {
+        iteratePaths(function (index, value) {
+            var this_text = $("a[href=" + value + "]").first().html();
+            var comment_count = $(value + " .comment.commit-comment").length;
+            $("a[href=" + value + "]").first().html(this_text + " (" + comment_count +  ")");
+
         });
     }
 
     function renderPaths() {
         movePageRight();
         movePaths();
+        addCommentCount();
         hideAllPaths();
         showPath(current_index);
     }
