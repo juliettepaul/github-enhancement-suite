@@ -21,18 +21,20 @@
         });
     }
 
-    function movePaths () {
+    function movePaths() {
         $('#toc').wrapInner('<div style="position:fixed; width: 490px; top: 60px; left: 0px;" />');
     }
 
-    function movePageRight () {
+    function movePageRight() {
         $('.hentry').css('margin', '0px 0px 0px 500px');
     }
 
-    function showPath (index) {
+    function showPath(index) {
         $(filelist[current_index]).hide();
+        $("a[href=" + filelist[current_index] + "]").css('font-weight', 'normal');
         current_index = index;
         $(filelist[index]).show();
+        $("a[href=" + filelist[index] + "]").css('font-weight', 'bold');
     }
 
     function hideAllPaths() {
