@@ -53,8 +53,9 @@
         iteratePaths(function (index, value) {
             var this_text = $("a[href=" + value + "]").first().html();
             var comment_count = $(value + " .comment.commit-comment").length;
-            $("a[href=" + value + "]").first().html(this_text + " (" + comment_count +  ")");
-
+            if (comment_count > 0) {
+                $("a[href=" + value + "]").first().html(this_text + " (" + comment_count +  ")");
+            }
         });
     }
 
