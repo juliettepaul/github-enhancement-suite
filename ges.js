@@ -26,7 +26,7 @@
     }
 
     function movePageRight() {
-        $('.hentry').css('margin', '0px 0px 0px 500px');
+        $('.hentry').css('margin', '0px 0px 0px auto');
     }
 
     function showPath(index) {
@@ -59,12 +59,16 @@
         });
     }
 
+    function addCommentScrollingEvent() {
+    }
+
     function renderPaths() {
         movePageRight();
         movePaths();
         addCommentCount();
         hideAllPaths();
         showPath(current_index);
+        addCommentScrollingEvent();
     }
 
     function attachEvents() {
