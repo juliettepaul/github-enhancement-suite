@@ -32,11 +32,16 @@
     }
 
     function showPath(index) {
-        $(filelist[current_index]).hide();
-        $("a[href=" + filelist[current_index] + "]").css('font-weight', 'normal');
+        var old_file_link = $("a[href=" + filelist[current_index] + "]"),
+            new_file_link = $("a[href=" + filelist[index] + "]"),
+            old_file = $(filelist[current_index]),
+            new_file = $(filelist[index]);
+        old_file.hide();
+        old_file_link.css('font-weight', 'normal');
+        new_file.show();
+        new_file_link.css('font-weight', 'bold');
         current_index = index;
-        $(filelist[index]).show();
-        $("a[href=" + filelist[index] + "]").css('font-weight', 'bold');
+        window.scrollTo(0, new_file.offset().top);
     }
 
     function iteratePaths(func) {
@@ -78,7 +83,6 @@
             filelist[index] = $(this).attr('href');
             $(this).click(function () { 
                 showPath(index);
-                window.scrollTo(0, 300);
                 return false;
             });
         });
