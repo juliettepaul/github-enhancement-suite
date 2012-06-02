@@ -11,6 +11,7 @@
 
 (function($) {
     var comments = new Array();
+    var write_bucket = null;
     var approval_regex = /lgtm/i;
     var rejected_regex = /rejected/i;
     var approved_style = {
@@ -37,8 +38,14 @@
     };
     var inner_approval_style = {
         'float' : 'left',
-        'height' : '28px'
+        'height' : '26px'
     };
+
+    // Find the post comment form so we can approve/deny easily
+    function findWriteBucket() {
+        write_bucket = $('[id^=write_bucket_] textarea');
+        $('button.primary').prop('id', 'post-comment');
+    }
 
     // First get a list of all approval comments on the page then parse them
     function parseComments() {
@@ -62,9 +69,10 @@
         });
     }
 
+    // Add list of approvals/rejections to top of timeline
     function renderApprovalDiv() {
         var discussion_timeline = $('div.discussion-timeline');
-        discussion_timeline.prepend('<div class="new-comments"><div class="comment starting-comment"><div id="approvals" class="bubble"></div></div></div>');
+        discussion_timeline.prepend('<div class="new-comments"><div class="comment starting-comment"><div id="approvals" class="bubble"></div></div></div><br/>');
         var approvals = $('#approvals');
         $.each(comments, function (index, value) {
             if (value) { 
@@ -80,8 +88,32 @@
         });
         $('span.approved').css(approved_style);
         $('span.rejected').css(rejected_style);
+        addApproveButtons();
     }
 
+    // Add quick approve/reject buttons
+    function addApproveButtons() {
+        var form_actions = $('form div.form-actions');
+        $('form div.form-actions .tip').hide();
+        form_actions.append('<button type="submit" class="classy primary approveit"><span>Approve</span></button> <button type="submit" class="classy primary rejectit"><span>Reject</span></button>');
+        $('button.approveit').on('click', function (e) {
+            e.preventDefault();
+            if (write_bucket.val().search(approval_regex) == -1) {
+                write_bucket.val('lgtm: ' + write_bucket.val());
+            }
+            $('button#post-comment').click();
+        });
+
+        $('button.rejectit').on('click', function (e) {
+            e.preventDefault();
+            if (write_bucket.val().search(rejected_regex) == -1) {
+                write_bucket.val('rejected because: ' + write_bucket.val());
+            }
+            $('button#post-comment').click();
+        });
+    }
+
+    findWriteBucket();
     parseComments();
     renderApprovalDiv();
 })(jQuery);
