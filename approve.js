@@ -57,7 +57,7 @@
                     id: div_id,
                     approval: approved
                 };
-                $(this).hide();
+                $(this).parent().parent().hide();
             }
         });
     }
