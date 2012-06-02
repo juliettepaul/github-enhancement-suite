@@ -37,8 +37,9 @@
         'border-radius': '3px'
     };
     var inner_approval_style = {
+        'margin-top' : '4px',
         'float' : 'left',
-        'height' : '26px'
+        'height' : '22px',
     };
 
     // Find the post comment form so we can approve/deny easily
@@ -86,8 +87,10 @@
                 approvals.append('<div style="clear: left;" />');
             }
         });
+        approvals.css('background', 'white');
         $('span.approved').css(approved_style);
         $('span.rejected').css(rejected_style);
+        $(last).css('height', '22px');
         addApproveButtons();
     }
 
