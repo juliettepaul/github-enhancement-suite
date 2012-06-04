@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Pull Request Approval Enhancement
 // @namespace  jpi
-// @version    0.1
+// @version    0.2
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -44,7 +44,7 @@
 
     // Find the post comment form so we can approve/deny easily
     function findWriteBucket() {
-        write_bucket = $('[id^=write_bucket_] textarea');
+        write_bucket = $('#pull_comment_form [id^=write_bucket_] textarea').last();
         $('button.primary').prop('id', 'post-comment');
     }
 
@@ -103,7 +103,7 @@
             if (write_bucket.val().search(approval_regex) == -1) {
                 write_bucket.val('lgtm: ' + write_bucket.val());
             }
-            $('button#post-comment').click();
+            $('button#post-comment').last().click();
         });
 
         $('button.rejectit').on('click', function (e) {
@@ -111,7 +111,7 @@
             if (write_bucket.val().search(rejected_regex) == -1) {
                 write_bucket.val('rejected because: ' + write_bucket.val());
             }
-            $('button#post-comment').click();
+            $('button#post-comment').last().click();
         });
     }
 
