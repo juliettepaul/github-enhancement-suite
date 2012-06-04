@@ -11,7 +11,7 @@ Installation
 * Reload github tabs
 
 New Features
-* Approve/Reject with convient list of approvals at top of review
+* Approve/Reject with convenient list of approvals at top of review
 * Comment count on files list
 
 Future Feature List:
