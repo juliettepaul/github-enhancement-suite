@@ -90,7 +90,6 @@
         approvals.css('background', 'white');
         $('span.approved').css(approved_style);
         $('span.rejected').css(rejected_style);
-        $(last).css('height', '22px');
         addApproveButtons();
     }
 
