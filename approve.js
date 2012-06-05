@@ -111,7 +111,8 @@
         $('button.approveit').on('click', function (e) {
             e.preventDefault();
             if (write_bucket.val().search(approval_regex) == -1) {
-                write_bucket.val('lgtm: ' + write_bucket.val());
+                var new_comment = 'lgtm' + (write_bucket.val() ? ':' : '') + write_bucket.val();
+                write_bucket.val(new_comment);
             }
             $('#pull_comment_form button#post-comment').click();
         });
@@ -119,7 +120,8 @@
         $('button.rejectit').on('click', function (e) {
             e.preventDefault();
             if (write_bucket.val().search(rejected_regex) == -1) {
-                write_bucket.val('rejected because: ' + write_bucket.val());
+                var new_comment = 'rejected because' + (write_bucket.val() ? ':' : '') + write_bucket.val();
+                write_bucket.val(new_comment);
             }
             $('#pull_comment_form button#post-comment').click();
         });
