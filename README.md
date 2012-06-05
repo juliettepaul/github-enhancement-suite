@@ -11,6 +11,8 @@ Installation
 * Reload github tabs
 
 New Features
+* RENAMED ges.js -> files.js, **NOTE** You have to remove the old script since the name has changed
+* Automatically adjust page margins only for diff view
 * Approve/Reject with convenient list of approvals at top of review
 * Comment count on files list
 
