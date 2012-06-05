@@ -41,6 +41,8 @@
         'float' : 'left',
         'height' : '22px',
     };
+    var created_approval_container = false;
+    var approvals = null;
 
     // Find the post comment form so we can approve/deny easily
     function findWriteBucket() {
@@ -72,11 +74,9 @@
 
     // Add list of approvals/rejections to top of timeline
     function renderApprovalDiv() {
-        var discussion_timeline = $('div.discussion-timeline');
-        discussion_timeline.prepend('<div class="new-comments"><div class="comment starting-comment"><div id="approvals" class="bubble"></div></div></div><br/>');
-        var approvals = $('#approvals');
         $.each(comments, function (index, value) {
             if (value) { 
+                prepareApprovalContainer();
                 if (value.approval) {
                     approvals.append('<div id="inner-approval-' + index + '"><span class="approved">Approved</span> </div>');
                 } else {
@@ -87,10 +87,18 @@
                 approvals.append('<div style="clear: left;" />');
             }
         });
-        approvals.css('background', 'white');
         $('span.approved').css(approved_style);
         $('span.rejected').css(rejected_style);
         addApproveButtons();
+    }
+
+    function prepareApprovalContainer() {
+        if (!created_approval_container) {
+            var discussion_timeline = $('div.discussion-timeline');
+            discussion_timeline.prepend('<div class="new-comments"><div class="comment starting-comment"><div id="approvals" class="bubble"></div></div></div><br/>');
+            approvals = $('#approvals'); 
+            approvals.css('background', 'white');
+        }
     }
 
     // Add quick approve/reject buttons
