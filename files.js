@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name       GitHub Enhancement Suite
+// @name       GitHub Files View Enhancement 
 // @namespace  jpi
 // @version    0.3
 // @description  
@@ -16,6 +16,7 @@
 (function($) {
     var filelist = new Array();
     var current_index = 0;
+    var files_url_regex = /files/;
 
     function parsePaths() {
         $('td.path a').each(function (index) {
@@ -27,8 +28,12 @@
         $('#toc').wrapInner('<div style="position:fixed; width: 490px; top: 60px; left: 0px;" />');
     }
 
-    function movePageRight() {
-        $('.hentry').css('margin', '0px 0px 0px auto');
+    function adjustPageMargins() {
+        if (String(window.location).match(files_url_regex)) {
+            $('.hentry').css('margin', '0px 0px 0px auto');
+        } else {
+            $('.hentry').css('margin', '0px auto');
+        }
     }
 
     function showPath(index) {
@@ -70,7 +75,7 @@
     }
 
     function renderPaths() {
-        movePageRight();
+        adjustPageMargins();
         movePaths();
         addCommentCount();
         hideAllPaths();
@@ -86,10 +91,14 @@
                 return false;
             });
         });
+
+        $('ul.js-hard-tabs li a').click(adjustPageMargins);
     }
 
     parsePaths();
     renderPaths();
     attachEvents();
 })(jQuery);
+
+
 
