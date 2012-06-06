@@ -16,7 +16,7 @@
 (function($) {
     var filelist = new Array();
     var current_index = 0;
-    var files_url_regex = /files/;
+    var files_url_regex = /(files|commit[^s])/;
 
     function parsePaths() {
         $('td.path a').each(function (index) {
