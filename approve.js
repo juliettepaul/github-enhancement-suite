@@ -46,6 +46,7 @@
 
     // Find the post comment form so we can approve/deny easily
     function findWriteBucket() {
+        // TODO: Fix approve/reject button on line notes
         write_bucket = $('#pull_comment_form [id^=write_bucket_] textarea');
         $('button.primary').prop('id', 'post-comment');
     }
@@ -105,7 +106,7 @@
 
     // Add quick approve/reject buttons
     function addApproveButtons() {
-        var form_actions = $('form div.form-actions');
+        var form_actions = $('#pull_comment_form div.form-actions');
         $('form div.form-actions .tip').hide();
         form_actions.append('<button type="submit" class="classy primary approveit"><span>Approve</span></button> <button type="submit" class="classy primary rejectit"><span>Reject</span></button>');
         $('button.approveit').on('click', function (e) {
