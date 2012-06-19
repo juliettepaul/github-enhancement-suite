@@ -1,7 +1,9 @@
 github-enhancement-suite
 ========================
 
-Makes your pull requests look like this: http://i.imgur.com/EK8l2.png
+File view: http://i.imgur.com/EK8l2.png
+Approve/Reject View: http://i.imgur.com/BBDHW.png
+Approve/Reject Buttons: http://i.imgur.com/T1UM7.png
 
 * Inspired by Kastner's Last Lecture
 
