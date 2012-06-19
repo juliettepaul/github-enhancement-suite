@@ -10,6 +10,7 @@ Installation
 * Install Tampermonkey, Greasemonkey or Greasekit
 * Add these scripts
 * Reload github tabs
+**NOTE** The easiest way to install this into greasemonkey is just copy paste the script into it. It's loading of files is pretty funky and I'm not sure why yet.
 
 New Features
 * RENAMED ges.js -> files.js, **NOTE** You have to remove the old script since the name has changed
