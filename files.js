@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Files View Enhancement 
 // @namespace  jpi
-// @version    0.3
+// @version    0.4
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -15,6 +15,7 @@
 
 (function($) {
     var filelist = new Array(),
+        new_diff_data = new Array(),
         viewed_comments = {
             comments: new Array(),
             counts: new Array()
@@ -22,8 +23,11 @@
         current_index = 0;
         files_url_regex = /(files|commit[^s])/;
 
-    function parsePaths() {
-        $('td.path a').each(function (index) {
+    // constants
+    var POLLING_TIME = 6000;
+
+    function parseFiles() {
+        $('#toc li a').each(function (index) {
             filelist[index] = {
                 href: $(this).attr('href'),
                 text: $(this).html(),
@@ -32,7 +36,7 @@
         });
     }
 
-    function movePaths() {
+    function moveFiles() {
         $('#toc').wrapInner('<div style="position:fixed; width: 490px; top: 60px; left: 0px;" />');
     }
 
@@ -42,9 +46,10 @@
         } else {
             $('.hentry').css('margin', '0px auto');
         }
+        $('.hentry').css('width', '60%');
     }
 
-    function showPath(index) {
+    function showFile(index) {
         var old_file_link = $("a[href=" + filelist[current_index].href + "]"),
             new_file_link = $("a[href=" + filelist[index].href + "]"),
             old_file = $(filelist[current_index].href),
@@ -57,20 +62,20 @@
         window.scrollTo(0, new_file.offset().top);
     }
 
-    function iteratePaths(func) {
+    function iterateFiles(func) {
         $.each(filelist, function (index, value) {
             func(index, value);
         });
     }
 
-    function hideAllPaths() {
-        iteratePaths(function (index, value) {
+    function hideAllFiles() {
+        iterateFiles(function (index, value) {
             $(value.href).hide();
         });
     }
 
     function updateCommentCount() {
-        iteratePaths(function (index, value) {
+        iterateFiles(function (index, value) {
             var comment_count = $(value.href + " .comment.commit-comment").length;
             if (comment_count > 0) {
                 value.elem.html(
@@ -107,7 +112,7 @@
         var docViewTop = $(window).scrollTop(),
             docViewBottom = docViewTop + $(window).height();
             
-        iteratePaths(function (index, value) {
+        iterateFiles(function (index, value) {
             $(value.href + ":visible .comment.commit-comment").filter(function () {
                 var thisTop = $(this).offset().top,
                     thisBottom = thisTop + $(this).height();
@@ -124,18 +129,18 @@
         updateCommentCount();
     }
 
-    function renderPaths() {
+    function renderFilesMod() {
         adjustPageMargins();
-        movePaths();
-        hideAllPaths();
-        showPath(current_index);
+        moveFiles();
+        hideAllFiles();
+        showFile(current_index);
         updateReadCommentCounts();
     }
 
     function attachEvents() {
-        iteratePaths(function (index, value) {
+        iterateFiles(function (index, value) {
             value.elem.click(function () { 
-                showPath(index);
+                showFile(index);
                 return false;
             });
         });
@@ -144,9 +149,46 @@
         $(window).scroll(updateReadCommentCounts);
     }
 
-    parsePaths();
-    renderPaths();
+    function pollForNewComments() {
+        $.ajax({
+            url: window.location,
+            success: function(data) {
+                var $data = $(data),
+                    comment_count = $('.comment.commit-comment').length,
+                    new_comment_count = $data.find('.comment.commit-comment').length;
+                if (comment_count != new_comment_count || 1) {
+                    storeDiffData($data);
+                    alertForReload(comment_count, new_comment_count);
+                }
+            }
+        });
+    }
+
+    function alertForReload(comment_count, new_comment_count) {
+    }
+
+    function storeDiffData(elem) {
+        new_diff_data = new Array();
+        elem.find('div[id^=diff-]').each(function (index) {
+            new_diff_data[index] = {
+                id: $(this).attr('id'),
+                html: $(this).html(),
+            };
+        });
+    }
+
+    function reloadDiffData() {
+        $.each(new_diff_data, function (index, value) {
+            // This doesn't work yet
+            //$('#' + value.id).html(value.html);
+        });
+        // TODO: invalidate comment counts properly
+    }
+
+    parseFiles();
+    renderFilesMod();
     attachEvents();
+
 })(jQuery);
 
 
