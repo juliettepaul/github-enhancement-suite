@@ -46,7 +46,6 @@
 
     // Find the post comment form so we can approve/deny easily
     function findWriteBucket() {
-        // TODO: Fix approve/reject button on line notes
         write_bucket = $('#pull_comment_form [id^=write_bucket_] textarea');
         $('button.primary').prop('id', 'post-comment');
     }
@@ -77,20 +76,29 @@
     function renderApprovalDiv() {
         $.each(comments, function (index, value) {
             if (value) { 
-                prepareApprovalContainer();
                 if (value.approval) {
-                    approvals.append('<div id="inner-approval-' + index + '"><span class="approved">Approved</span> </div>');
+                    addApproval(value.comment, value.user, 'approved');
                 } else {
-                    approvals.append('<div id="inner-approval-' + index + '"><span class="rejected">Rejected</span> </div>');
+                    addApproval(value.comment, value.user, 'rejected');
                 }
-                $('#inner-approval-' + index).css(inner_approval_style);
-                $('#inner-approval-' + index).append('<strong>' + value.user + '</strong> with this comment: ' + value.comment);
-                approvals.append('<div style="clear: left;" />');
             }
         });
+        $('.inner-approval').css(inner_approval_style);
+        addStyles();
+        addApproveButtons();
+    }
+
+    function addStyles() {
         $('span.approved').css(approved_style);
         $('span.rejected').css(rejected_style);
-        addApproveButtons();
+    }
+
+    // Add an approval to the Approve/Reject div
+    function addApproval(comment, user, type) {
+        prepareApprovalContainer();
+        approvals.append('<div class="inner-approval"><span class="' + type + '">Approved</span> <strong>' + user + 
+                '</strong> with this comment: ' + comment + '</div>');
+        approvals.append('<div style="clear: left;" />');
     }
 
     // Create the container if necessary to show approvals
@@ -102,6 +110,13 @@
             approvals.css('background', 'white');
             created_approval_container = true;
         }
+    }
+
+    // Redraw approvals
+    function redrawApprovals() {
+        approvals.text('');
+        parseComments();
+        renderApprovalDiv();
     }
 
     // Add quick approve/reject buttons
@@ -116,6 +131,8 @@
                 write_bucket.val(new_comment);
             }
             $('#pull_comment_form button#post-comment').click();
+            window.scrollTo(0, approvals.offset().top);
+            setTimeout(redrawApprovals, 1000);
         });
 
         $('button.rejectit').on('click', function (e) {
@@ -125,6 +142,8 @@
                 write_bucket.val(new_comment);
             }
             $('#pull_comment_form button#post-comment').click();
+            window.scrollTo(0, approvals.offset().top);
+            setTimeout(redrawApprovals, 1000);
         });
     }
 
