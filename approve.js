@@ -117,6 +117,7 @@
         approvals.text('');
         parseComments();
         renderApprovalDiv();
+        window.scrollTo(0, approvals.offset().top);
     }
 
     // Add quick approve/reject buttons
@@ -131,7 +132,6 @@
                 write_bucket.val(new_comment);
             }
             $('#pull_comment_form button#post-comment').click();
-            window.scrollTo(0, approvals.offset().top);
             setTimeout(redrawApprovals, 1000);
         });
 
@@ -142,7 +142,6 @@
                 write_bucket.val(new_comment);
             }
             $('#pull_comment_form button#post-comment').click();
-            window.scrollTo(0, approvals.offset().top);
             setTimeout(redrawApprovals, 1000);
         });
     }
