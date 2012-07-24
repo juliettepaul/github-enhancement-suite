@@ -101,7 +101,8 @@
     function addApproval(comment, user, type) {
         prepareApprovalContainer();
         approvals.append('<div class="inner-approval"><span class="' + type + '">' + type + '</span> <strong>' + user + 
-                '</strong> with this comment: ' + comment + '</div>');
+                '</strong> ' + 
+                (comment ? 'with this comment: ' + comment + '</div>' : ''));
         approvals.append('<div style="clear: left;" />');
     }
 
