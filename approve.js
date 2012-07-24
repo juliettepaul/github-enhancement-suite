@@ -14,6 +14,7 @@
     var write_bucket = null;
     var approval_regex = /(lgtm|approved)/i;
     var rejected_regex = /rejected/i;
+    var clear_regex = /(lgtm\:|approved\:|rejected\:)/i;
     var approved_style = {
         'float': 'left',
         'padding': '3px 10px',
@@ -23,7 +24,8 @@
         'font-weight': 'bold',
         'color': 'white',
         'background': '#6CC644',
-        'border-radius': '3px'
+        'border-radius': '3px',
+        'text-transform': 'capitalize'
     };
     var rejected_style = {
         'float': 'left',
@@ -34,7 +36,8 @@
         'font-weight': 'bold',
         'color': 'white',
         'background': 'red',
-        'border-radius': '3px'
+        'border-radius': '3px',
+        'text-transform': 'capitalize'
     };
     var inner_approval_style = {
         'margin-top' : '4px',
@@ -61,6 +64,7 @@
             // TODO: Time
 
             if (approved || rejected) {
+                comment_contents = comment_contents.replace(clear_regex, "");
                 comments[index] = {
                     comment: comment_contents,
                     user: author,
@@ -96,7 +100,7 @@
     // Add an approval to the Approve/Reject div
     function addApproval(comment, user, type) {
         prepareApprovalContainer();
-        approvals.append('<div class="inner-approval"><span class="' + type + '">Approved</span> <strong>' + user + 
+        approvals.append('<div class="inner-approval"><span class="' + type + '">' + type + '</span> <strong>' + user + 
                 '</strong> with this comment: ' + comment + '</div>');
         approvals.append('<div style="clear: left;" />');
     }
