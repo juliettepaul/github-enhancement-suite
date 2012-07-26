@@ -52,7 +52,7 @@
     }
 
     function moveFiles() {
-        $('#toc').wrapInner('<div style="position:fixed; width: 490px; top: 60px; left: 0px;" />');
+        $('#toc').wrapInner('<div style="position:fixed; width: 40%; top: 60px; left: 0px; z-index: 100;" />');
     }
 
     function adjustPageMargins() {
@@ -62,6 +62,7 @@
             $('.hentry').css('margin', '0px auto');
         }
         $('.hentry').css('width', '60%');
+        $('.line-comments .clipper').css('width', '99%');
     }
 
     function showFile(index) {
@@ -94,7 +95,7 @@
             var comment_count = $(value.href + " .comment.commit-comment").length;
             if (comment_count > 0) {
                 value.elem.html(
-                    value.text + " (" + getReadCommentCount(index) + '/' + comment_count +  ")"
+                    value.text.replace(/\//,'/&shy;') + " (" + getReadCommentCount(index) + '/' + comment_count +  ")"
                 );
             }
         });
