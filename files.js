@@ -37,7 +37,7 @@
  
 
     // constants
-    var POLLING_TIME = 2000;
+    var POLLING_TIME = 5000;
 
     function parseFiles() {
         $('#toc li a').filter(function () {
@@ -191,11 +191,7 @@
     function alertForReload(new_comment_count) {
         prepareReloadContainer();
         var reload_container = $('#reload');
-        if (new_comment_count > 1) {
-            reload_container.html(new_comment_count + ' new comment' + (new_comment_count == 1 ? ' has' : 's have') + ' been posted.<br/>');
-        } else {
-            reload_container.html('Comments have been updated.<br/>');
-        }
+        reload_container.html('Comments have been updated.<br/>');
         reload_container.append('<a href="#" id="reload-link">Reload</a>');
         $('#reload-link').click(reloadDiffData);
         $('#reload').css('display', 'block');
