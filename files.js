@@ -21,10 +21,23 @@
             counts: new Array()
         },
         current_index = 0;
-        files_url_regex = /(files|commit[^s])/;
+        files_url_regex = /(files|commit[^s])/,
+        created_reload_container = false,
+        reload_container_style = {
+            'position': 'fixed',
+            'bottom' : '5px',
+            'right' : '5px',
+            'padding' : '10px',
+            'border' : '1px solid black',
+            'width' : '300px',
+            'display' : 'none',
+            'z-index' : '100',
+            'background-color' : 'white'
+        };
+ 
 
     // constants
-    var POLLING_TIME = 6000;
+    var POLLING_TIME = 2000;
 
     function parseFiles() {
         $('#toc li a').filter(function () {
@@ -149,8 +162,8 @@
 
         $('ul.js-hard-tabs li a').click(adjustPageMargins);
         $(window).scroll(updateReadCommentCounts);
-        //setTimeout(pollForNewComments, POLLING_TIME);
-        //console.log('Set polling time');
+        setTimeout(pollForNewComments, POLLING_TIME);
+        console.log('Set polling time');
     }
 
     function pollForNewComments() {
@@ -159,27 +172,48 @@
             url: window.location,
             success: function(data) {
                 var $data = $(data),
-                    comment_count = $('.comment.commit-comment').length,
-                    new_comment_count = $data.find('.comment.commit-comment').length;
+                    comment_count = $('table.diff-table .comment.commit-comment').length,
+                    new_comment_count = $data.find('div#diff-comment-data .comment.commit-comment').length;
                 if (comment_count != new_comment_count) {
-                    console.log('found new comments');
+                    console.log('found new comments' + comment_count + ' ' + new_comment_count);
+
                     storeDiffData($data);
-                    alertForReload(comment_count, new_comment_count);
+                    alertForReload(new_comment_count - comment_count);
                 }
-                //setTimeout(pollForNewComments, POLLING_TIME);
+                setTimeout(pollForNewComments, POLLING_TIME);
             },
             error: function() {
-                //setTimeout(pollForNewComments, POLLING_TIME);
+                setTimeout(pollForNewComments, POLLING_TIME);
             }
         });
     }
 
-    function alertForReload(comment_count, new_comment_count) {
-        reloadDiffData();
+    function alertForReload(new_comment_count) {
+        prepareReloadContainer();
+        var reload_container = $('#reload');
+        if (new_comment_count > 1) {
+            reload_container.html(new_comment_count + ' new comment' + (new_comment_count == 1 ? ' has' : 's have') + ' been posted.<br/>');
+        } else {
+            reload_container.html('Comments have been updated.<br/>');
+        }
+        reload_container.append('<a href="#" id="reload-link">Reload</a>');
+        $('#reload-link').click(reloadDiffData);
+        $('#reload').css('display', 'block');
+    }
+
+    function prepareReloadContainer() {
+        if (!created_reload_container) {
+            $('body').append('<div id="reload"></div>');
+            var reload_container = $('#reload');
+            reload_container.css(reload_container_style);
+            created_reload_container = true;
+        }
     }
 
     function storeDiffData(elem) {
         new_diff_data = new Array();
+        var diff_comment_data = elem.find("#diff-comment-data");
+        $('#diff-comment-data').html(diff_comment_data.html());
         elem.find('div[id^=diff-]').each(function (index) {
             new_diff_data[index] = {
                 id: $(this).attr('id'),
@@ -192,7 +226,27 @@
         $.each(new_diff_data, function (index, value) {
             $('#' + value.id).html(value.html);
         });
-        // TODO: invalidate comment counts properly
+        // This next blip is copied from github since they didn't functionalize it.
+        $(function() {
+            var a;
+            if (!document.getElementById("diff-comment-data"))
+                return;
+            return a = {}, $("#files.diff-view > .file > .meta").each(function() {
+                return a[$(this).attr("data-path")] = this
+            }), $("#diff-comment-data > table").each(function() {
+                var b, c, d, e;
+                return c = $(this).attr("data-path"), d = $(this).attr("data-position"), b = $(a[c]).closest(".file"), e = b.find(".data table tr[data-position='" + d + "']"), e.after($(this).find("tr").detach()), b.addClass("has-inline-notes show-inline-notes")
+            }), $("#diff-comment-data > div").each(function() {
+                var b;
+                return b = $(this).attr("data-path"), $(a[b]).closest(".file").find(".file-comments-place-holder").replaceWith($(this).detach())
+            })
+        }), $(document).on("change", ".js-show-inline-comments-toggle", function() {
+            return $(this).closest(".file").toggleClass("show-inline-notes", this.checked)
+        }), $(document).on("change", "#js-inline-comments-toggle", function() {
+            return $("#comments").toggleClass("only-commit-comments", !this.checked)
+        })
+        updateReadCommentCounts();
+        $('#reload').css('display', 'none');
     }
 
     parseFiles();
