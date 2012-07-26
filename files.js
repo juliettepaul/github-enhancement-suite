@@ -62,7 +62,9 @@
             $('.hentry').css('margin', '0px auto');
         }
         $('.hentry').css('width', '60%');
-        $('.line-comments .clipper').css('width', '99%');
+        var sheet = document.styleSheets[0];
+        var rules = 'cssRules' in sheet? sheet.cssRules : sheet.rules;
+        sheet.insertRule('.line-comments .clipper { width: 99% }', rules.length);
     }
 
     function showFile(index) {
