@@ -15,13 +15,13 @@
 
 (function($) {
     var filelist = new Array(),
-        new_diff_data = new Array(),
+        diff_data = new Array(),
         viewed_comments = {
             comments: new Array(),
             counts: new Array()
         },
         current_index = 0;
-        files_url_regex = /(files|commit[^s])/,
+        files_url_regex = /(files|commit[^s]|compare)/,
         created_reload_container = false,
         reload_container_style = {
             'position': 'fixed',
@@ -210,11 +210,11 @@
     }
 
     function storeDiffData(elem) {
-        new_diff_data = new Array();
+        diff_data = new Array();
         var diff_comment_data = elem.find("#diff-comment-data");
         $('#diff-comment-data').html(diff_comment_data.html());
         elem.find('div[id^=diff-]').each(function (index) {
-            new_diff_data[index] = {
+            diff_data[index] = {
                 id: $(this).attr('id'),
                 html: $(this).html(),
             };
@@ -222,7 +222,7 @@
     }
 
     function reloadDiffData() {
-        $.each(new_diff_data, function (index, value) {
+        $.each(diff_data, function (index, value) {
             $('#' + value.id).html(value.html);
         });
         // This next blip is copied from github since they didn't functionalize it.
@@ -243,7 +243,9 @@
             return $(this).closest(".file").toggleClass("show-inline-notes", this.checked)
         }), $(document).on("change", "#js-inline-comments-toggle", function() {
             return $("#comments").toggleClass("only-commit-comments", !this.checked)
-        })
+        });
+        // end copy from github source
+        // TODO: Find a better way to do this
         updateReadCommentCounts();
         $('#reload').css('display', 'none');
     }
