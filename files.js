@@ -63,7 +63,7 @@
         }
         $('.hentry').css('width', '60%');
         var sheet = document.styleSheets[0];
-        var rules = 'cssRules' in sheet? sheet.cssRules : sheet.rules;
+        var rules = sheet.cssRules;
         sheet.insertRule('.line-comments .clipper { width: 99% }', rules.length);
     }
 
