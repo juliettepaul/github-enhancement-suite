@@ -27,7 +27,9 @@
     var POLLING_TIME = 6000;
 
     function parseFiles() {
-        $('#toc li a').each(function (index) {
+        $('#toc li a').filter(function () {
+            return ! $(this).parent().hasClass('diffstat');
+        }).each(function (index) {
             filelist[index] = {
                 href: $(this).attr('href'),
                 text: $(this).html(),
@@ -147,24 +149,33 @@
 
         $('ul.js-hard-tabs li a').click(adjustPageMargins);
         $(window).scroll(updateReadCommentCounts);
+        //setTimeout(pollForNewComments, POLLING_TIME);
+        //console.log('Set polling time');
     }
 
     function pollForNewComments() {
+        console.log('Polling...');
         $.ajax({
             url: window.location,
             success: function(data) {
                 var $data = $(data),
                     comment_count = $('.comment.commit-comment').length,
                     new_comment_count = $data.find('.comment.commit-comment').length;
-                if (comment_count != new_comment_count || 1) {
+                if (comment_count != new_comment_count) {
+                    console.log('found new comments');
                     storeDiffData($data);
                     alertForReload(comment_count, new_comment_count);
                 }
+                //setTimeout(pollForNewComments, POLLING_TIME);
+            },
+            error: function() {
+                //setTimeout(pollForNewComments, POLLING_TIME);
             }
         });
     }
 
     function alertForReload(comment_count, new_comment_count) {
+        reloadDiffData();
     }
 
     function storeDiffData(elem) {
@@ -179,8 +190,7 @@
 
     function reloadDiffData() {
         $.each(new_diff_data, function (index, value) {
-            // This doesn't work yet
-            //$('#' + value.id).html(value.html);
+            $('#' + value.id).html(value.html);
         });
         // TODO: invalidate comment counts properly
     }
@@ -188,7 +198,6 @@
     parseFiles();
     renderFilesMod();
     attachEvents();
-
 })(jQuery);
 
 
