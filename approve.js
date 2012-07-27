@@ -10,42 +10,41 @@
 // ==/UserScript==
 
 (function($) {
-    var comments = new Array();
-    var write_bucket = null;
-    var approval_regex = /(lgtm|approved)/i;
-    var rejected_regex = /rejected/i;
-    var clear_regex = /(lgtm\:|approved\:|rejected\:)/i;
-    var approved_style = {
-        'float': 'left',
-        'padding': '3px 10px',
-        'margin-top': '-2px',
-        'margin-right': '8px',
-        'font-size': '12px',
-        'font-weight': 'bold',
-        'color': 'white',
-        'background': '#6CC644',
-        'border-radius': '3px',
-        'text-transform': 'capitalize'
-    };
-    var rejected_style = {
-        'float': 'left',
-        'padding': '3px 10px',
-        'margin-top': '-2px',
-        'margin-right': '8px',
-        'font-size': '12px',
-        'font-weight': 'bold',
-        'color': 'white',
-        'background': 'red',
-        'border-radius': '3px',
-        'text-transform': 'capitalize'
-    };
-    var inner_approval_style = {
-        'margin-top' : '4px',
-        'float' : 'left',
-        'height' : '22px',
-    };
-    var created_approval_container = false;
-    var approvals = null;
+    var comments = {},
+        write_bucket = null,
+        approval_regex = /(lgtm|approved)/i,
+        rejected_regex = /rejected/i,
+        clear_regex = /(lgtm\:|approved\:|rejected\:)/i,
+        approved_style = {
+            'float': 'left',
+            'padding': '3px 10px',
+            'margin-top': '-2px',
+            'margin-right': '8px',
+            'font-size': '12px',
+            'font-weight': 'bold',
+            'color': 'white',
+            'background': '#6CC644',
+            'border-radius': '3px',
+            'text-transform': 'capitalize'
+        },
+        rejected_style = {
+            'float': 'left',
+            'padding': '3px 10px',
+            'margin-top': '-2px',
+            'margin-right': '8px',
+            'font-size': '12px',
+            'font-weight': 'bold',
+            'color': 'white',
+            'background': 'red',
+            'border-radius': '3px',
+            'text-transform': 'capitalize'
+        },
+        inner_approval_style = {
+            'margin-top' : '4px',
+            'float' : 'left',
+            'height' : '22px',
+        },
+        approvals = null;
 
     // Find the post comment form so we can approve/deny easily
     function findWriteBucket() {
@@ -55,6 +54,7 @@
 
     // First get a list of all approval comments on the page then parse them
     function parseComments() {
+        comments = {};
         $('[id^=issuecomment-]').each(function (index) {
             var div_id = $(this).attr('id'),
                 author = $('#' + div_id + ' strong.author a').html(),
@@ -65,7 +65,7 @@
 
             if (approved || rejected) {
                 comment_contents = comment_contents.replace(clear_regex, "");
-                comments[index] = {
+                comments[div_id] = {
                     comment: comment_contents,
                     user: author,
                     id: div_id,
@@ -92,6 +92,7 @@
         addApproveButtons();
     }
 
+    // Add Styles to all approval/rejection spans
     function addStyles() {
         $('span.approved').css(approved_style);
         $('span.rejected').css(rejected_style);
@@ -108,9 +109,9 @@
 
     // Create the container if necessary to show approvals
     function prepareApprovalContainer() {
-        if (!created_approval_container) {
+        if (!approvals) {
             var discussion_timeline = $('div.discussion-timeline');
-            discussion_timeline.prepend('<div class="new-comments"><div class="comment starting-comment"><div id="approvals" class="bubble"></div></div></div><br/>');
+            discussion_timeline.prepend('<div class="new-comments" style="width: 58%;"><div class="comment starting-comment"><div id="approvals" class="bubble"></div></div></div><br/>');
             approvals = $('#approvals'); 
             approvals.css('background', 'white');
             created_approval_container = true;
@@ -119,6 +120,7 @@
 
     // Redraw approvals
     function redrawApprovals() {
+        prepareApprovalContainer();
         approvals.text('');
         parseComments();
         renderApprovalDiv();
