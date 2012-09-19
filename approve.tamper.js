@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Pull Request Approval Enhancement
 // @namespace  jpi
-// @version    0.2
+// @version    0.3
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -48,7 +48,7 @@
 
     // Find the post comment form so we can approve/deny easily
     function findWriteBucket() {
-        write_bucket = $('#pull_comment_form [id^=write_bucket_] textarea');
+        write_bucket = $('form.js-new-comment-form [id^=write_bucket_] textarea');
         $('button.primary').prop('id', 'post-comment');
     }
 
@@ -57,8 +57,8 @@
         comments = {};
         $('[id^=issuecomment-]').each(function (index) {
             var div_id = $(this).attr('id'),
-                author = $('#' + div_id + ' strong.author a').html(),
-                comment_contents = $('#' + div_id + ' .body .content-body p').html(),
+                author = $('#' + div_id + ' div.comment-header a.comment-header-author').html(),
+                comment_contents = $('#' + div_id + ' .comment-body p').html(),
                 approved = comment_contents.search(approval_regex) >= 0,
                 rejected = comment_contents.search(rejected_regex) >= 0;
             // TODO: Time
@@ -129,7 +129,7 @@
 
     // Add quick approve/reject buttons
     function addApproveButtons() {
-        var form_actions = $('#pull_comment_form div.form-actions');
+        var form_actions = $('div.form-actions button').filter(function (index) { return this.innerText == 'Comment'; }).parent();
         $('form div.form-actions .tip').hide();
         form_actions.append('<button type="submit" class="classy primary approveit"><span>Approve</span></button> <button type="submit" class="classy primary rejectit"><span>Reject</span></button>');
         $('button.approveit').on('click', function (e) {
@@ -138,7 +138,7 @@
                 var new_comment = 'approved' + (write_bucket.val() ? ': ' : '') + write_bucket.val();
                 write_bucket.val(new_comment);
             }
-            $('#pull_comment_form button#post-comment').click();
+            $('button#post-comment').click();
             setTimeout(redrawApprovals, 1000);
         });
 
@@ -148,7 +148,7 @@
                 var new_comment = 'rejected' + (write_bucket.val() ? ': ' : '') + write_bucket.val();
                 write_bucket.val(new_comment);
             }
-            $('#pull_comment_form button#post-comment').click();
+            $('button#post-comment').click();
             setTimeout(redrawApprovals, 1000);
         });
     }
