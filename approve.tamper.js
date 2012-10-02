@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Pull Request Approval Enhancement
 // @namespace  jpi
-// @version    0.3
+// @version    0.4
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -71,7 +71,7 @@
                     id: div_id,
                     approval: approved
                 };
-                $(this).parent().parent().hide();
+                $(this).parent().parent().parent().hide();
             }
         });
     }
