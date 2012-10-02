@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Files View Enhancement 
 // @namespace  jpi
-// @version    0.4
+// @version    0.5
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -52,7 +52,9 @@
     }
 
     function moveFiles() {
-        $('#toc').wrapInner('<div style="position:fixed; width: 40%; top: 60px; left: 0px; z-index: 100;" />');
+        $('#toc').wrapInner('<div style="position:fixed; width: 38%; top: 60px; left: 0px; z-index: 100;" />');
+        $('#toc').addClass('open');
+        $('p .minibutton.js-details-target').hide();
     }
 
     function adjustPageMargins() {
