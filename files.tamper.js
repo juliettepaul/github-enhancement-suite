@@ -96,7 +96,7 @@
 
     function updateCommentCount() {
         iterateFiles(function (index, value) {
-            var comment_count = $(value.href + " .comment.commit-comment").length;
+            var comment_count = $(value.href + " .commit-comment-header").length;
             if (comment_count > 0) {
                 value.elem.html(
                     value.text.replace(/\//,'/&shy;') + " (" + getReadCommentCount(index) + '/' + comment_count +  ")"
@@ -133,7 +133,7 @@
             docViewBottom = docViewTop + $(window).height();
             
         iterateFiles(function (index, value) {
-            $(value.href + ":visible .comment.commit-comment").filter(function () {
+            $(value.href + ":visible div.js-comment.comment").filter(function () {
                 var thisTop = $(this).offset().top,
                     thisBottom = thisTop + $(this).height();
                 
@@ -143,7 +143,9 @@
                 );
             }).each(function () {
                 var comment_id = parseInt($(this).attr('id').substr(1));
-                setReadComment(index, comment_id);
+                if (comment_id > 0) {
+                    setReadComment(index, comment_id);
+                }
             });
         });
         updateCommentCount();
@@ -177,8 +179,8 @@
             url: window.location,
             success: function(data) {
                 var $data = $(data),
-                    comment_count = $('table.diff-table .comment.commit-comment').length,
-                    new_comment_count = $data.find('div#diff-comment-data .comment.commit-comment').length;
+                    comment_count = $('table.diff-table .commit-comment-header').length,
+                    new_comment_count = $data.find('div#diff-comment-data .commit-comment-header').length;
                 if (comment_count != new_comment_count) {
                     console.log('found new comments' + comment_count + ' ' + new_comment_count);
 
