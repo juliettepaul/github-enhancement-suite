@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Files View Enhancement 
 // @namespace  jpi
-// @version    0.5
+// @version    0.6
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -12,7 +12,6 @@
 // @match      https://*github.com/*/compare/*
 // @copyright  2012
 // ==/UserScript==
-
 (function($) {
     var filelist = new Array(),
         diff_data = new Array(),
@@ -35,10 +34,8 @@
             'background-color' : 'white'
         };
  
-
     // constants
     var POLLING_TIME = 5000;
-
     function parseFiles() {
         $('#toc li a').filter(function () {
             return ! $(this).parent().hasClass('diffstat');
@@ -50,13 +47,11 @@
             };
         });
     }
-
     function moveFiles() {
-        $('#toc').wrapInner('<div style="position:fixed; width: 38%; top: 60px; left: 0px; z-index: 100; height: 100%; overflow: scroll;" />');
+        $('#toc').wrapInner('<div style="position:fixed; width: 38%; top: 60px; left: 0px; z-index: 100; height: 90%; overflow: scroll;" />');
         $('#toc').addClass('open');
         $('p .minibutton.js-details-target').hide();
     }
-
     function adjustPageMargins() {
         if (String(window.location).match(files_url_regex)) {
             $('.hentry').css('margin', '0px 0px 0px auto');
@@ -68,7 +63,6 @@
         var rules = sheet.cssRules;
         sheet.insertRule('.line-comments .clipper { width: 99% }', rules.length);
     }
-
     function showFile(index) {
         var old_file_link = $("a[href=" + filelist[current_index].href + "]"),
             new_file_link = $("a[href=" + filelist[index].href + "]"),
@@ -81,19 +75,16 @@
         current_index = index;
         window.scrollTo(0, new_file.offset().top);
     }
-
     function iterateFiles(func) {
         $.each(filelist, function (index, value) {
             func(index, value);
         });
     }
-
     function hideAllFiles() {
         iterateFiles(function (index, value) {
             $(value.href).hide();
         });
     }
-
     function updateCommentCount() {
         iterateFiles(function (index, value) {
             var comment_count = $(value.href + " .commit-comment-header").length;
@@ -104,22 +95,18 @@
             }
         });
     }
-
     function getReadCommentCount(index) {
         initReadComment(index);
         return viewed_comments.counts[index];
     }
-
     function initReadComment(index) {
         if (! viewed_comments.counts[index]) {
             viewed_comments.counts[index] = 0;
         }
-
         if (! viewed_comments.comments[index]) {
             viewed_comments.comments[index] = new Array();
         }
     }
-
     function setReadComment(index, comment_id) {
         initReadComment(index);
         if (! viewed_comments.comments[index][comment_id]) {
@@ -127,7 +114,6 @@
             viewed_comments.counts[index]++;
         }
     }
-
     function updateReadCommentCounts() {
         var docViewTop = $(window).scrollTop(),
             docViewBottom = docViewTop + $(window).height();
@@ -150,7 +136,6 @@
         });
         updateCommentCount();
     }
-
     function renderFilesMod() {
         adjustPageMargins();
         moveFiles();
@@ -158,7 +143,6 @@
         showFile(current_index);
         updateReadCommentCounts();
     }
-
     function attachEvents() {
         iterateFiles(function (index, value) {
             value.elem.click(function () { 
@@ -166,13 +150,11 @@
                 return false;
             });
         });
-
         $('ul.js-hard-tabs li a').click(adjustPageMargins);
         $(window).scroll(updateReadCommentCounts);
         setTimeout(pollForNewComments, POLLING_TIME);
         console.log('Set polling time');
     }
-
     function pollForNewComments() {
         console.log('Polling...');
         $.ajax({
@@ -183,7 +165,6 @@
                     new_comment_count = $data.find('div#diff-comment-data .commit-comment-header').length;
                 if (comment_count != new_comment_count) {
                     console.log('found new comments' + comment_count + ' ' + new_comment_count);
-
                     storeDiffData($data);
                     alertForReload(new_comment_count - comment_count);
                 }
@@ -194,7 +175,6 @@
             }
         });
     }
-
     function alertForReload(new_comment_count) {
         prepareReloadContainer();
         var reload_container = $('#reload');
@@ -203,7 +183,6 @@
         $('#reload-link').click(reloadDiffData);
         $('#reload').css('display', 'block');
     }
-
     function prepareReloadContainer() {
         if (!created_reload_container) {
             $('body').append('<div id="reload"></div>');
@@ -212,7 +191,6 @@
             created_reload_container = true;
         }
     }
-
     function storeDiffData(elem) {
         diff_data = new Array();
         var diff_comment_data = elem.find("#diff-comment-data");
@@ -224,7 +202,6 @@
             };
         });
     }
-
     function reloadDiffData() {
         $.each(diff_data, function (index, value) {
             $('#' + value.id).html(value.html);
@@ -253,7 +230,6 @@
         updateReadCommentCounts();
         $('#reload').css('display', 'none');
     }
-
     parseFiles();
     renderFilesMod();
     attachEvents();
