@@ -52,7 +52,7 @@
     }
 
     function moveFiles() {
-        $('#toc').wrapInner('<div style="position:fixed; width: 38%; top: 60px; left: 0px; z-index: 100;" />');
+        $('#toc').wrapInner('<div style="position:fixed; width: 38%; top: 60px; left: 0px; z-index: 100; height: 100%; overflow: scroll;" />');
         $('#toc').addClass('open');
         $('p .minibutton.js-details-target').hide();
     }
@@ -258,6 +258,3 @@
     renderFilesMod();
     attachEvents();
 })(jQuery);
-
-
-
