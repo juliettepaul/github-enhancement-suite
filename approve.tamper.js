@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Pull Request Approval Enhancement
 // @namespace  jpi
-// @version    0.4
+// @version    0.5
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -49,7 +49,7 @@
     // Find the post comment form so we can approve/deny easily
     function findWriteBucket() {
         write_bucket = $('form.js-new-comment-form [id^=write_bucket_] textarea');
-        $('button.primary').prop('id', 'post-comment');
+        $('div.form-actions button.primary').prop('id', 'post-comment');
     }
 
     // First get a list of all approval comments on the page then parse them
