@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Pull Request Approval Enhancement
 // @namespace  jpi
-// @version    0.5
+// @version    0.6
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -131,7 +131,7 @@
     function addApproveButtons() {
         var form_actions = $('div.form-actions button').filter(function (index) { return this.innerText == 'Comment'; }).parent();
         $('form div.form-actions .tip').hide();
-        form_actions.append('<button type="submit" class="classy primary approveit"><span>Approve</span></button> <button type="submit" class="classy primary rejectit"><span>Reject</span></button>');
+        form_actions.append('<button type="submit" class="button primary approveit"><span>Approve</span></button> <button type="submit" class="button primary rejectit"><span>Reject</span></button>');
         $('button.approveit').on('click', function (e) {
             e.preventDefault();
             if (write_bucket.val().search(approval_regex) == -1) {
