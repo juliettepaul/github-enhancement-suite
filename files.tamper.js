@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       GitHub Files View Enhancement 
 // @namespace  jpi
-// @version    0.7
+// @version    0.8
 // @description  
 // @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @match      https://github.etsycorp.com/*/pull/*
@@ -54,11 +54,10 @@
     }
     function adjustPageMargins() {
         if (String(window.location).match(files_url_regex)) {
-            $('.hentry').css('margin', '0px 0px 0px auto');
+            $('.container').css('margin-right', '0px');
         } else {
-            $('.hentry').css('margin', '0px auto');
+            $('.container').css('margin-right', 'auto');
         }
-        $('.hentry').css('width', '60%');
         var sheet = document.styleSheets[0];
         var rules = sheet.cssRules;
         sheet.insertRule('.line-comments .clipper { width: 99% }', rules.length);
@@ -66,11 +65,10 @@
 
     function adjustPageMarginsClick(event) {
         if ($(event.target).data('container-id') == 'files_bucket') {
-            $('.hentry').css('margin', '0px 0px 0px auto');
+            $('.container').css('margin-right', '0px');
         } else {
-            $('.hentry').css('margin', '0px auto');
+            $('.container').css('margin-right', 'auto');
         }
-        $('.hentry').css('width', '60%');
         var sheet = document.styleSheets[0];
         var rules = sheet.cssRules;
         sheet.insertRule('.line-comments .clipper { width: 99% }', rules.length);
